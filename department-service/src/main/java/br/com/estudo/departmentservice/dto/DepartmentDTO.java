@@ -18,4 +18,8 @@ public class DepartmentDTO {
     private String description;
 
     private String code;
+
+    private boolean active;
+
+    private boolean deleted;
 }

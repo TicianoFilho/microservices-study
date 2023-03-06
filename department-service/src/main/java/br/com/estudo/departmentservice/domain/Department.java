@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,5 +25,14 @@ public class Department {
 
     private String description;
 
+    @Column(unique = true)
     private String code;
+
+    private boolean active;
+
+    private boolean deleted;
+
+    private LocalDateTime createdDate;
+
+    private LocalDateTime updatedDate;
 }
