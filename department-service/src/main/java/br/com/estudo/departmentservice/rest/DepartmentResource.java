@@ -27,10 +27,9 @@ public class DepartmentResource {
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<DepartmentDTO> getByCode(@PathVariable(name = "code") String code,
-                                                   @RequestParam(name = "active") boolean active) {
+    public ResponseEntity<DepartmentDTO> getByCode(@PathVariable(name = "code") String code) {
 
-        DepartmentDTO dto = this.departmentService.getByCode(code, active);
+        DepartmentDTO dto = this.departmentService.getByCode(code);
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
@@ -52,10 +51,9 @@ public class DepartmentResource {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DepartmentDTO>> getAll(Pageable pageable,
-                                                      @RequestParam(name = "active") boolean active) {
+    public ResponseEntity<Page<DepartmentDTO>> getAll(Pageable pageable) {
 
-        Page<DepartmentDTO> departments = this.departmentService.findAll(pageable, active);
+        Page<DepartmentDTO> departments = this.departmentService.findAll(pageable);
 
         return new ResponseEntity<>(departments, HttpStatus.OK);
     }

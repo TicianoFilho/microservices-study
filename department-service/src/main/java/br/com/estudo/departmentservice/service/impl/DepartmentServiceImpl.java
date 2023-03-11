@@ -31,9 +31,9 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
     }
 
     @Override
-    public DepartmentDTO getByCode(String code, boolean active) {
+    public DepartmentDTO getByCode(String code) {
 
-        Department department = this.getActiveDepartmentByCode(code, active);
+        Department department = this.getActiveDepartmentByCode(code);
 
         return mapper.map(department, DepartmentDTO.class);
     }
@@ -44,10 +44,7 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
 
         Department department = this.getActiveDepartmentById(id);
 
-        department.setName(dto.getName());
-        department.setCode(dto.getCode().toUpperCase());
-        department.setDescription(dto.getDescription());
-        department.setUpdatedDate(LocalDateTime.now());
+        this.updatePayLoadFields(dto, department);
 
         DepartmentDTO updatedDepartmentDto = mapper.map(this.departmentRepository.save(department), DepartmentDTO.class);
 
@@ -55,9 +52,9 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
     }
 
     @Override
-    public Page<DepartmentDTO> findAll(Pageable pageable, boolean active) {
+    public Page<DepartmentDTO> findAll(Pageable pageable) {
 
-        Page<Department> departments = this.departmentRepository.findAllByActive(pageable, active);
+        Page<Department> departments = this.departmentRepository.findAllByActive(pageable, true);
 
         return departments.map(department -> mapper.map(department, DepartmentDTO.class));
     }
@@ -74,6 +71,13 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
         departmentRepository.save(department);
     }
 
+    private void updatePayLoadFields(DepartmentDTO dto, Department department) {
+
+        department.setName(dto.getName());
+        department.setCode(dto.getCode().toUpperCase());
+        department.setDescription(dto.getDescription());
+        department.setUpdatedDate(LocalDateTime.now());
+    }
 
     private void deleteBusinessLogic(Department department) {
 
@@ -90,9 +94,9 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
         department.setCode(department.getCode().toUpperCase());
     }
 
-    private Department getActiveDepartmentByCode(String code, boolean active) {
+    private Department getActiveDepartmentByCode(String code) {
 
-        return this.departmentRepository.findByCodeAndActive(code.toUpperCase(), active)
+        return this.departmentRepository.findByCodeAndActive(code.toUpperCase(), true)
                 .orElseThrow(() -> new RuntimeException("Department not found"));
     }
 

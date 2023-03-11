@@ -9,11 +9,11 @@ public interface DepartmentService {
 
     public DepartmentDTO save(DepartmentDTO dto);
 
-    public DepartmentDTO getByCode(String code, boolean actvie);
+    public DepartmentDTO getByCode(String code);
 
     public DepartmentDTO update(long id, DepartmentDTO dto);
 
-    public Page<DepartmentDTO> findAll(Pageable pageable, boolean active);
+    public Page<DepartmentDTO> findAll(Pageable pageable);
 
     public void delete(long id);
 
