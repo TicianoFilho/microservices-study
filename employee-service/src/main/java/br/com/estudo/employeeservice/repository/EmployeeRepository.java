@@ -9,9 +9,7 @@ import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-    public Optional<Employee> findByCode(String code);
+    //public Optional<Employee> findByIdAndActive(long id, boolean active);
 
-    public Optional<Employee> findByIdAndActive(long id, boolean active);
-
-    public Page<Employee> findAllByActive(Pageable pageable, boolean active);
+    //public Page<Employee> findAllByActive(Pageable pageable, boolean active);
 }
