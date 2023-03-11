@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,4 +25,12 @@ public class Employee {
     private String lastName;
 
     private String email;
+
+    private boolean active;
+
+    private boolean deleted;
+
+    private LocalDateTime createdDate;
+
+    private LocalDateTime updatedDate;
 }
