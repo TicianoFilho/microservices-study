@@ -1,4 +1,4 @@
-package br.com.estudo.departmentservice.config;
+package br.com.estudo.employeeservice.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

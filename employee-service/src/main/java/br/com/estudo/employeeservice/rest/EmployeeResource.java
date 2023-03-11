@@ -1,10 +1,8 @@
-package br.com.estudo.departmentservice.rest;
+package br.com.estudo.employeeservice.rest;
 
-import br.com.estudo.departmentservice.dto.DepartmentDTO;
-import br.com.estudo.departmentservice.service.DepartmentService;
+import br.com.estudo.employeeservice.dto.EmployeeDTO;
+import br.com.estudo.employeeservice.service.EmployeeService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,48 +11,40 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/departments")
-public class DepartmentResource {
+@RequestMapping("/api/employees")
+public class EmployeeResource {
 
-    private DepartmentService departmentService;
+    private EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<DepartmentDTO> save(@RequestBody DepartmentDTO dto) {
+    public ResponseEntity<EmployeeDTO> save(@RequestBody EmployeeDTO dto) {
 
-        DepartmentDTO savedDepartment = departmentService.save(dto);
+        EmployeeDTO savedEmployee = employeeService.save(dto);
 
-        return new ResponseEntity<>(savedDepartment, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/{code}")
-    public ResponseEntity<DepartmentDTO> getByCode(@PathVariable(name = "code") String code) {
-
-        DepartmentDTO dto = this.departmentService.getByCode(code);
-
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DepartmentDTO> update(@PathVariable(name = "id") long id, @RequestBody DepartmentDTO dto) {
+    public ResponseEntity<EmployeeDTO> update(@PathVariable(name = "id") long id, @RequestBody EmployeeDTO dto) {
 
-        DepartmentDTO updatedDepartment = this.departmentService.update(id, dto);
+        EmployeeDTO updatedEmployee = this.employeeService.update(id, dto);
 
-        return new ResponseEntity<>(updatedDepartment, HttpStatus.OK);
+        return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") long id) {
 
-        this.departmentService.delete(id);
+        this.employeeService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping
-    public ResponseEntity<Page<DepartmentDTO>> getAll(Pageable pageable) {
+    public ResponseEntity<Page<EmployeeDTO>> getAll(Pageable pageable) {
 
-        Page<DepartmentDTO> departments = this.departmentService.findAll(pageable);
+        Page<EmployeeDTO> Employees = this.employeeService.findAll(pageable);
 
-        return new ResponseEntity<>(departments, HttpStatus.OK);
+        return new ResponseEntity<>(Employees, HttpStatus.OK);
     }
 }

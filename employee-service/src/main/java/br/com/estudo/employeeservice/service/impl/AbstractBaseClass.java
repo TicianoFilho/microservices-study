@@ -1,4 +1,4 @@
-package br.com.estudo.departmentservice.service.impl;
+package br.com.estudo.employeeservice.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
