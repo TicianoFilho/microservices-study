@@ -1,6 +1,8 @@
 package br.com.estudo.departmentservice.rest;
 
 import br.com.estudo.departmentservice.dto.DepartmentDTO;
+import br.com.estudo.departmentservice.dto.ErrorDetailsDTO;
+import br.com.estudo.departmentservice.exception.ResourceNotFoundException;
 import br.com.estudo.departmentservice.service.DepartmentService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @RestController
@@ -56,5 +61,18 @@ public class DepartmentResource {
         Page<DepartmentDTO> departments = this.departmentService.findAll(pageable);
 
         return new ResponseEntity<>(departments, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class )
+    public ResponseEntity<ErrorDetailsDTO> handleResourceNotFoundException(
+            ResourceNotFoundException exception, WebRequest webRequest) {
+
+        ErrorDetailsDTO errorDto = new ErrorDetailsDTO(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(Boolean.FALSE),
+                "RESOURCE_NOT_FOUND");
+
+        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 }

@@ -97,12 +97,12 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
     private Department getActiveDepartmentByCode(String code) {
 
         return this.departmentRepository.findByCodeAndActive(code.toUpperCase(), true)
-                .orElseThrow(() -> new ResourceNotFoundException(this.getClass().getName(), "code", code));
+                .orElseThrow(() -> new ResourceNotFoundException("Department", "code", code));
     }
 
     private Department getActiveDepartmentById(Long id) {
 
         return this.departmentRepository.findByIdAndActive(id, true)
-                .orElseThrow(() -> new ResourceNotFoundException(this.getClass().getName(), "id", String.valueOf(id)));
+                .orElseThrow(() -> new ResourceNotFoundException("Department", "id", String.valueOf(id)));
     }
 }
