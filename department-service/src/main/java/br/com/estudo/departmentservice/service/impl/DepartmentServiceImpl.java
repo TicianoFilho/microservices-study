@@ -2,6 +2,7 @@ package br.com.estudo.departmentservice.service.impl;
 
 import br.com.estudo.departmentservice.domain.Department;
 import br.com.estudo.departmentservice.dto.DepartmentDTO;
+import br.com.estudo.departmentservice.exception.ResourceNotFoundException;
 import br.com.estudo.departmentservice.repository.DepartmentRepository;
 import br.com.estudo.departmentservice.service.DepartmentService;
 import lombok.AllArgsConstructor;
@@ -63,8 +64,7 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
     @Override
     public void delete(long id) {
 
-        Department department = this.departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Department not found"));
+        Department department = this.getActiveDepartmentById(id);
 
         this.deleteBusinessLogic(department);
 
@@ -97,12 +97,12 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
     private Department getActiveDepartmentByCode(String code) {
 
         return this.departmentRepository.findByCodeAndActive(code.toUpperCase(), true)
-                .orElseThrow(() -> new RuntimeException("Department not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(this.getClass().getName(), "code", code));
     }
 
     private Department getActiveDepartmentById(Long id) {
 
         return this.departmentRepository.findByIdAndActive(id, true)
-                .orElseThrow(() -> new RuntimeException("Department not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(this.getClass().getName(), "id", String.valueOf(id)));
     }
 }
