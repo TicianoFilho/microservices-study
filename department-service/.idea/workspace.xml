@@ -115,7 +115,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/../employee-service/src/main/java/br/com/estudo/employeeservice/service/impl/EmployeeServiceImpl.java</url>
-          <line>24</line>
+          <line>26</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
