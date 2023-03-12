@@ -41,21 +41,58 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
 
     @Override
     public EmployeeDTO update(long id, EmployeeDTO dto) {
-        return null;
+
+        Employee employee = this.getActiveEmployeeById(id);
+
+        this.updatePayLoadFields(dto, employee);
+
+        EmployeeDTO updatedEmployeeDto = mapper.map(this.employeeRepository.save(employee), EmployeeDTO.class);
+
+        return updatedEmployeeDto;
     }
 
     @Override
     public Page<EmployeeDTO> findAll(Pageable pageable) {
-        return null;
+
+        Page<Employee> employees = this.employeeRepository.findAllByActive(pageable, true);
+
+        return employees.map(department -> mapper.map(department, EmployeeDTO.class));
     }
 
     @Override
     public EmployeeDTO findById(long id) {
-        return null;
+
+        Employee employee = this.getActiveEmployeeById(id);
+
+        return mapper.map(employee, EmployeeDTO.class);
     }
 
     @Override
     public void delete(long id) {
 
+        Employee employee = this.getActiveEmployeeById(id);
+
+        this.deleteBusinessLogic(employee);
+
+        this.employeeRepository.save(employee);
+    }
+
+    private void deleteBusinessLogic(Employee employee) {
+
+        employee.setActive(Boolean.FALSE);
+        employee.setDeleted(Boolean.TRUE);
+    }
+
+    private Employee getActiveEmployeeById(long id) {
+        return this.employeeRepository.findByIdAndActive(id, true)
+                .orElseThrow(() -> new RuntimeException("Emmployee not found"));
+    }
+
+    private void updatePayLoadFields(EmployeeDTO dto, Employee employee) {
+
+        employee.setFirstName(dto.getFirstName());
+        employee.setLastName(dto.getLastName());
+        employee.setEmail(dto.getEmail());
+        employee.setUpdatedDate(LocalDateTime.now());
     }
 }
