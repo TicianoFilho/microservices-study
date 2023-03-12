@@ -63,16 +63,4 @@ public class DepartmentResource {
         return new ResponseEntity<>(departments, HttpStatus.OK);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class )
-    public ResponseEntity<ErrorDetailsDTO> handleResourceNotFoundException(
-            ResourceNotFoundException exception, WebRequest webRequest) {
-
-        ErrorDetailsDTO errorDto = new ErrorDetailsDTO(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                webRequest.getDescription(Boolean.FALSE),
-                "RESOURCE_NOT_FOUND");
-
-        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
-    }
 }
