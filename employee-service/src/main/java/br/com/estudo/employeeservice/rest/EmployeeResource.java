@@ -47,4 +47,12 @@ public class EmployeeResource {
 
         return new ResponseEntity<>(Employees, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeDTO> getById(@PathVariable(name = "id") Long id) {
+
+        EmployeeDTO Employee = this.employeeService.findById(id);
+
+        return new ResponseEntity<>(Employee, HttpStatus.OK);
+    }
 }
