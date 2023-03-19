@@ -21,6 +21,8 @@ public class EmployeeDTO {
 
     private String email;
 
+    private String departmentCode;
+
     private boolean active;
 
     private boolean deleted;

@@ -37,5 +37,5 @@ public class Employee {
     private LocalDateTime updatedDate;
 
     @Column(name = "department_code")
-    private String DepartmentCode;
+    private String departmentCode;
 }

@@ -77,8 +77,9 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
                 .bodyToMono(DepartmentDTO.class)
                 .block();
 
-        ApiResponseDTO apiResponseDTO = mapper.map(employee, ApiResponseDTO.class);
-        apiResponseDTO = mapper.map(departmentDTO, ApiResponseDTO.class);
+        ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
+        apiResponseDTO.setEmployee(mapper.map(employee, EmployeeDTO.class));
+        apiResponseDTO.setDepartment(departmentDTO);
 
         return apiResponseDTO;
     }
@@ -110,5 +111,6 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
         employee.setLastName(dto.getLastName());
         employee.setEmail(dto.getEmail());
         employee.setUpdatedDate(LocalDateTime.now());
+        employee.setDepartmentCode(dto.getDepartmentCode());
     }
 }
