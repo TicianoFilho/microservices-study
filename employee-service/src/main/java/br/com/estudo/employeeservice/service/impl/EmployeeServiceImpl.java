@@ -2,6 +2,7 @@ package br.com.estudo.employeeservice.service.impl;
 
 import br.com.estudo.employeeservice.domain.Employee;
 import br.com.estudo.employeeservice.dto.EmployeeDTO;
+import br.com.estudo.employeeservice.exception.ResourceNotFoundException;
 import br.com.estudo.employeeservice.repository.EmployeeRepository;
 import br.com.estudo.employeeservice.service.EmployeeService;
 import lombok.AllArgsConstructor;
@@ -85,7 +86,7 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
 
     private Employee getActiveEmployeeById(long id) {
         return this.employeeRepository.findByIdAndActive(id, true)
-                .orElseThrow(() -> new RuntimeException("Emmployee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", String.valueOf(id)));
     }
 
     private void updatePayLoadFields(EmployeeDTO dto, Employee employee) {
