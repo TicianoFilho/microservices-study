@@ -1,5 +1,6 @@
 package br.com.estudo.employeeservice.rest;
 
+import br.com.estudo.employeeservice.dto.ApiResponseDTO;
 import br.com.estudo.employeeservice.dto.EmployeeDTO;
 import br.com.estudo.employeeservice.service.EmployeeService;
 import lombok.AllArgsConstructor;
@@ -49,10 +50,10 @@ public class EmployeeResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ApiResponseDTO> getById(@PathVariable(name = "id") Long id) {
 
-        EmployeeDTO Employee = this.employeeService.findById(id);
+        ApiResponseDTO apiResponseDTO = this.employeeService.findById(id);
 
-        return new ResponseEntity<>(Employee, HttpStatus.OK);
+        return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
     }
 }

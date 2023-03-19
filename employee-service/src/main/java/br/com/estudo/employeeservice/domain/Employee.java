@@ -35,4 +35,7 @@ public class Employee {
     private LocalDateTime createdDate;
 
     private LocalDateTime updatedDate;
+
+    @Column(name = "department_code")
+    private String DepartmentCode;
 }
