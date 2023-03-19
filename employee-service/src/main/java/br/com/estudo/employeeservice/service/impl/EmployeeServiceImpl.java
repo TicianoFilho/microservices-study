@@ -1,6 +1,8 @@
 package br.com.estudo.employeeservice.service.impl;
 
 import br.com.estudo.employeeservice.domain.Employee;
+import br.com.estudo.employeeservice.dto.ApiResponseDTO;
+import br.com.estudo.employeeservice.dto.DepartmentDTO;
 import br.com.estudo.employeeservice.dto.EmployeeDTO;
 import br.com.estudo.employeeservice.exception.ResourceNotFoundException;
 import br.com.estudo.employeeservice.repository.EmployeeRepository;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +24,9 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private WebClient webClient;
 
     @Override
     public EmployeeDTO save(EmployeeDTO dto) {
@@ -61,11 +67,21 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
     }
 
     @Override
-    public EmployeeDTO findById(long id) {
+    public ApiResponseDTO findById(long id) {
 
         Employee employee = this.getActiveEmployeeById(id);
 
-        return mapper.map(employee, EmployeeDTO.class);
+        DepartmentDTO departmentDTO = webClient.get()
+                .uri(String.format("http://localhost:8080/api/departments/%s", employee.getDepartmentCode()))
+                .retrieve()
+                .bodyToMono(DepartmentDTO.class)
+                .block();
+
+        ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
+        apiResponseDTO.setEmployee(mapper.map(employee, EmployeeDTO.class));
+        apiResponseDTO.setDepartment(departmentDTO);
+
+        return apiResponseDTO;
     }
 
     @Override
@@ -95,5 +111,6 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
         employee.setLastName(dto.getLastName());
         employee.setEmail(dto.getEmail());
         employee.setUpdatedDate(LocalDateTime.now());
+        employee.setDepartmentCode(dto.getDepartmentCode());
     }
 }
