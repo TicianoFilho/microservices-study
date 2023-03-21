@@ -6,6 +6,7 @@ import br.com.estudo.employeeservice.dto.DepartmentDTO;
 import br.com.estudo.employeeservice.dto.EmployeeDTO;
 import br.com.estudo.employeeservice.exception.ResourceNotFoundException;
 import br.com.estudo.employeeservice.repository.EmployeeRepository;
+import br.com.estudo.employeeservice.service.APIClient;
 import br.com.estudo.employeeservice.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private WebClient webClient;
+    private APIClient apiClient;
 
     @Override
     public EmployeeDTO save(EmployeeDTO dto) {
@@ -71,11 +72,7 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
 
         Employee employee = this.getActiveEmployeeById(id);
 
-        DepartmentDTO departmentDTO = webClient.get()
-                .uri(String.format("http://localhost:8080/api/departments/%s", employee.getDepartmentCode()))
-                .retrieve()
-                .bodyToMono(DepartmentDTO.class)
-                .block();
+        DepartmentDTO departmentDTO = apiClient.getDepartment(employee.getDepartmentCode()); // Here is the communication between microservices through Spring Cloud Open Feign.
 
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
         apiResponseDTO.setEmployee(mapper.map(employee, EmployeeDTO.class));
