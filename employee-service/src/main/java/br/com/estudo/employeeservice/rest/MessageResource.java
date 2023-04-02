@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Setter
 @RefreshScope // To refresh the value from configuration file.
 @RestController
-@RequestMapping("/employees")
 public class MessageResource {
 
     @Value("${spring.boot.message}")
