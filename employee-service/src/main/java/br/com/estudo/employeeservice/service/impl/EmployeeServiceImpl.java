@@ -8,6 +8,7 @@ import br.com.estudo.employeeservice.exception.ResourceNotFoundException;
 import br.com.estudo.employeeservice.repository.EmployeeRepository;
 import br.com.estudo.employeeservice.service.APIClient;
 import br.com.estudo.employeeservice.service.EmployeeService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,7 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
         return employees.map(department -> mapper.map(department, EmployeeDTO.class));
     }
 
+    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
     @Override
     public ApiResponseDTO findById(long id) {
 
@@ -109,5 +111,25 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
         employee.setEmail(dto.getEmail());
         employee.setUpdatedDate(LocalDateTime.now());
         employee.setDepartmentCode(dto.getDepartmentCode());
+    }
+
+    // Method created for circuitBreaker to get a default department. See this.findById method.
+    public ApiResponseDTO getDefaultDepartment(long id, Exception exception) {
+
+        Employee employee = this.getActiveEmployeeById(id);
+
+        DepartmentDTO departmentDTO = new DepartmentDTO();
+        departmentDTO.setName("default department name");
+        departmentDTO.setCode("DF001");
+        departmentDTO.setDescription("Default department description");
+        departmentDTO.setDeleted(Boolean.FALSE);
+        departmentDTO.setActive(Boolean.TRUE);
+        departmentDTO.setCreateDate(LocalDateTime.now());
+
+        ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
+        apiResponseDTO.setEmployee(mapper.map(employee, EmployeeDTO.class));
+        apiResponseDTO.setDepartment(departmentDTO);
+
+        return apiResponseDTO;
     }
 }
