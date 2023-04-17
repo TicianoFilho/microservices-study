@@ -2,6 +2,7 @@ package br.com.study.organizationservice.service.impl;
 
 import br.com.study.organizationservice.domain.Organization;
 import br.com.study.organizationservice.dto.OrganizationDTO;
+import br.com.study.organizationservice.exception.ResourceNotFoundException;
 import br.com.study.organizationservice.repository.OrganizationRepository;
 import br.com.study.organizationservice.service.OrganizationService;
 import org.modelmapper.ModelMapper;
@@ -30,7 +31,7 @@ public class OrganizationServiceImpl extends AbstractBaseClass implements Organi
     public OrganizationDTO getById(Long id) {
 
         Organization organization = this.organizationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Organization", "id", id.toString()));
 
         return mapper.map(organization, OrganizationDTO.class);
     }
