@@ -38,4 +38,7 @@ public class Employee {
 
     @Column(name = "department_code")
     private String departmentCode;
+
+    @Column(name = "organization_code")
+    private String organizationCode;
 }

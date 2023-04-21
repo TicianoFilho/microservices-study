@@ -2,6 +2,8 @@ package br.com.study.organizationservice.rest;
 
 import br.com.study.organizationservice.dto.OrganizationDTO;
 import br.com.study.organizationservice.service.OrganizationService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +26,18 @@ public class OrganizationResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(organizationDTO);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrganizationDTO> getById(@PathVariable(name = "id") Long id) {
+    @GetMapping
+    public ResponseEntity<Page<OrganizationDTO>> getAll(Pageable pageable) {
 
-        OrganizationDTO organizationDTO = this.organizationService.getById(id);
+        Page<OrganizationDTO> organizationDTOS = organizationService.getAll(pageable);
+
+        return ResponseEntity.ok(organizationDTOS);
+    }
+
+    @GetMapping("/{code}")
+    public ResponseEntity<OrganizationDTO> getByCode(@PathVariable(name = "code") String code) {
+
+        OrganizationDTO organizationDTO = organizationService.getByCode(code);
 
         return ResponseEntity.ok(organizationDTO);
     }

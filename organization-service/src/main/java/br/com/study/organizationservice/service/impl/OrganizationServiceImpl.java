@@ -6,9 +6,14 @@ import br.com.study.organizationservice.exception.ResourceNotFoundException;
 import br.com.study.organizationservice.repository.OrganizationRepository;
 import br.com.study.organizationservice.service.OrganizationService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrganizationServiceImpl extends AbstractBaseClass implements OrganizationService {
@@ -28,11 +33,24 @@ public class OrganizationServiceImpl extends AbstractBaseClass implements Organi
     }
 
     @Override
-    public OrganizationDTO getById(Long id) {
+    public Page<OrganizationDTO> getAll(Pageable pageable) {
+        Page<Organization> organizations = organizationRepository.findAll(pageable);
 
-        Organization organization = this.organizationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Organization", "id", id.toString()));
+        List<OrganizationDTO> organizationDTOS = organizations.stream().map(organization -> {
+            return mapper.map(organization, OrganizationDTO.class);
+        }).toList();
+
+        return new PageImpl<>(organizationDTOS, pageable, organizations.getTotalElements());
+    }
+
+    @Override
+    public OrganizationDTO getByCode(String code) {
+
+        Organization organization = organizationRepository.findByCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization", "code", code));
 
         return mapper.map(organization, OrganizationDTO.class);
     }
+
+
 }
