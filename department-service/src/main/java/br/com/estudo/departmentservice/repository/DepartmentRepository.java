@@ -18,4 +18,6 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
     public Page<Department> findAllByActive(Pageable pageable, boolean active);
 
+    public boolean existsByCode(String code);
+
 }

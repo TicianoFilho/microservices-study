@@ -37,4 +37,17 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(ResourceAlreadyExistsException.class )
+    public ResponseEntity<ErrorDetailsDTO> handleResourceAlreadyExistsException(
+            ResourceAlreadyExistsException exception, WebRequest webRequest) {
+
+        ErrorDetailsDTO errorDto = new ErrorDetailsDTO(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(Boolean.FALSE),
+                "CONFLICT");
+
+        return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
+    }
 }

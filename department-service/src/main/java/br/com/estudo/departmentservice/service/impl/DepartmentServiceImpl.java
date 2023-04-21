@@ -2,6 +2,7 @@ package br.com.estudo.departmentservice.service.impl;
 
 import br.com.estudo.departmentservice.domain.Department;
 import br.com.estudo.departmentservice.dto.DepartmentDTO;
+import br.com.estudo.departmentservice.exception.ResourceAlreadyExistsException;
 import br.com.estudo.departmentservice.exception.ResourceNotFoundException;
 import br.com.estudo.departmentservice.repository.DepartmentRepository;
 import br.com.estudo.departmentservice.service.DepartmentService;
@@ -87,6 +88,8 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
 
     private void saveBusinessLogic(Department department) {
 
+        this.checkIfDepartmentExists(department);
+
         department.setId(null);
         department.setActive(true);
         department.setDeleted(false);
@@ -104,5 +107,15 @@ public class DepartmentServiceImpl extends AbstractBaseClass implements Departme
 
         return this.departmentRepository.findByIdAndActive(id, true)
                 .orElseThrow(() -> new ResourceNotFoundException("Department", "id", String.valueOf(id)));
+    }
+
+    private void checkIfDepartmentExists(Department department) throws ResourceAlreadyExistsException {
+
+        String code = department.getCode();
+
+        if (departmentRepository.existsByCode(code)) {
+            throw new ResourceAlreadyExistsException("Department", "code", code);
+        }
+
     }
 }

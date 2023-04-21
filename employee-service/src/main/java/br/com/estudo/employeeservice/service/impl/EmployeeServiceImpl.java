@@ -4,6 +4,7 @@ import br.com.estudo.employeeservice.domain.Employee;
 import br.com.estudo.employeeservice.dto.ApiResponseDTO;
 import br.com.estudo.employeeservice.dto.DepartmentDTO;
 import br.com.estudo.employeeservice.dto.EmployeeDTO;
+import br.com.estudo.employeeservice.dto.OrganizationDTO;
 import br.com.estudo.employeeservice.exception.ResourceNotFoundException;
 import br.com.estudo.employeeservice.repository.EmployeeRepository;
 import br.com.estudo.employeeservice.service.APIClient;
@@ -29,6 +30,9 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
 
     @Autowired
     private APIClient apiClient;
+
+    @Autowired
+    private WebClient webClient;
 
     @Override
     public EmployeeDTO save(EmployeeDTO dto) {
@@ -74,11 +78,20 @@ public class EmployeeServiceImpl extends AbstractBaseClass implements EmployeeSe
 
         Employee employee = this.getActiveEmployeeById(id);
 
-        DepartmentDTO departmentDTO = apiClient.getDepartment(employee.getDepartmentCode()); // Here is the communication between microservices through Spring Cloud Open Feign.
+        // Here is the communication between microservices through Spring Cloud Open Feign.
+        DepartmentDTO departmentDTO = apiClient.getDepartment(employee.getDepartmentCode());
+
+        // using WebClient to make communication between microservices
+        OrganizationDTO organizationDTO = webClient.get()
+                .uri("http://localhost:8083/api/organizations/" + employee.getOrganizationCode())
+                .retrieve()
+                .bodyToMono(OrganizationDTO.class)
+                .block();
 
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
         apiResponseDTO.setEmployee(mapper.map(employee, EmployeeDTO.class));
         apiResponseDTO.setDepartment(departmentDTO);
+        apiResponseDTO.setOrganization(organizationDTO);
 
         return apiResponseDTO;
     }

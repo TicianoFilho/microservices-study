@@ -23,6 +23,8 @@ public class EmployeeDTO {
 
     private String departmentCode;
 
+    private String OrganizationCode;
+
     private boolean active;
 
     private boolean deleted;

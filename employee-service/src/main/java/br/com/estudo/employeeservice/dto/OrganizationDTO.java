@@ -9,11 +9,15 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiResponseDTO {
+public class OrganizationDTO {
 
-    private EmployeeDTO employee;
+    private Long id;
 
-    private DepartmentDTO department;
+    private String name;
 
-    private OrganizationDTO organization;
+    private String description;
+
+    private String code;
+
+    private String createdDate;
 }
