@@ -2,6 +2,7 @@ package br.com.study.organizationservice.service.impl;
 
 import br.com.study.organizationservice.domain.Organization;
 import br.com.study.organizationservice.dto.OrganizationDTO;
+import br.com.study.organizationservice.exception.ResourceAlreadyExistsException;
 import br.com.study.organizationservice.exception.ResourceNotFoundException;
 import br.com.study.organizationservice.repository.OrganizationRepository;
 import br.com.study.organizationservice.service.OrganizationService;
@@ -26,6 +27,8 @@ public class OrganizationServiceImpl extends AbstractBaseClass implements Organi
 
     @Override
     public OrganizationDTO save(OrganizationDTO dto) {
+
+        this.checkIfDepartmentExists(dto);
 
         Organization organization = this.organizationRepository.save(mapper.map(dto, Organization.class));
 
@@ -52,5 +55,14 @@ public class OrganizationServiceImpl extends AbstractBaseClass implements Organi
         return mapper.map(organization, OrganizationDTO.class);
     }
 
+    private void checkIfDepartmentExists(OrganizationDTO dto) throws ResourceAlreadyExistsException {
+
+        String code = dto.getCode();
+
+        if (organizationRepository.existsByCode(code)) {
+            throw new ResourceAlreadyExistsException("Organization", "code", code);
+        }
+
+    }
 
 }
